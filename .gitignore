@@ -1,0 +1,16 @@
+.idea/
+.vscode/
+node_modules/
+build/
+temp/
+.env
+coverage
+ormconfig.json
+dist
+
+docker/postgres/db
+.docker/postgres/db
+.docker/dbdata
+
+uploads/*
+!uploads/.gitkeep
