@@ -9,10 +9,10 @@ export type SearchParams = {
 
 export interface IInfluencersRepository {
   findAll({ page, skip, take }: SearchParams): Promise<IInfluencerPaginate>;
-  findByName(name: string): Promise<IInfluencer | null>;
-  findById(id: string): Promise<IInfluencer | null>;
-  findByEmail(email: string): Promise<IInfluencer | null>;
-//   create(data: ICreateCustomer): Promise<ICustomer>;
-//   save(customer: ICustomer): Promise<ICustomer>;
+  // findByName(name: string): Promise<IInfluencer | null>;
+  // findById(id: string): Promise<IInfluencer | null>;
+  // findByEmail(email: string): Promise<IInfluencer | null>;
+  create(data: IInfluencer): Promise<IInfluencer>;
+  // save(influencer: IInfluencer): Promise<IInfluencer>;
 //   remove(customer: ICustomer): Promise<void>;
 }

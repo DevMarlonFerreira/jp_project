@@ -7,10 +7,10 @@ import {
 } from "typeorm";
 import { IInfluencer } from "@modules/influencers/domain/models/IInfluencer";
 
-@Entity("customers")
+@Entity("influencers")
 class Influencer implements IInfluencer {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  // @PrimaryGeneratedColumn("uuid")
+  // _id: string;
 
   @Column()
   name: string;

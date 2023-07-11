@@ -10,6 +10,17 @@ const influencersController = new InfluencersController();
 
 customersRouter.get('/', influencersController.index);
 
+customersRouter.post(
+    '/',
+    celebrate({
+      [Segments.BODY]: {
+        name: Joi.string().required(),
+        email: Joi.string().email().required(),
+      },
+    }),
+    influencersController.create,
+  );
+
 // customersRouter.get(
 //   '/:id',
 //   celebrate({

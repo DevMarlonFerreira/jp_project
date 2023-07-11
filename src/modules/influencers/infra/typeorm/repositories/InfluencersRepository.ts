@@ -36,7 +36,7 @@ class InfluencersRepository implements IInfluencersRepository {
 
   public async findById(id: string): Promise<Influencer | null> {
     const influencer = await this.ormRepository.findOneBy({
-      id,
+      _id: id,
     });
 
     return influencer;
@@ -59,7 +59,7 @@ class InfluencersRepository implements IInfluencersRepository {
     skip,
     take,
   }: SearchParams): Promise<IInfluencerPaginate> {
-    const [customers, count] = await this.ormRepository
+    const [influencers, count] = await this.ormRepository
       .createQueryBuilder()
       .skip(skip)
       .take(take)
@@ -69,7 +69,7 @@ class InfluencersRepository implements IInfluencersRepository {
       per_page: take,
       total: count,
       current_page: page,
-      data: customers,
+      data: influencers,
     };
 
     return result;

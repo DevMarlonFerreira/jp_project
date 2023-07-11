@@ -1,15 +1,18 @@
-import 'reflect-metadata';
-import 'dotenv/config';
-import express, { NextFunction, Request, Response, Application } from 'express';
-import 'express-async-errors';
-import cors from 'cors';
-import { errors } from 'celebrate';
-import routes from './routes';
-import AppError from '../../errors/AppError';
+import "reflect-metadata";
+import "dotenv/config";
+import express, { NextFunction, Request, Response, Application } from "express";
+import "express-async-errors";
+import cors from "cors";
+import { errors } from "celebrate";
+import routes from "./routes";
+import AppError from "../../errors/AppError";
+import '@shared/container';
+import logger from "@config/logger";
+
 // import '@shared/typeorm';
-// import '@shared/container';
-import logger from '@config/logger';
 // import { connect } from '../typeorm';
+
+import * as database from "../../../config/database";
 
 export class SetupServer {
   private app: Application;
@@ -30,8 +33,8 @@ export class SetupServer {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(
       cors({
-        origin: '*',
-      }),
+        origin: "*",
+      })
     );
 
     this.app.use(errors());
@@ -40,33 +43,34 @@ export class SetupServer {
         error: Error,
         request: Request,
         response: Response,
-        next: NextFunction,
+        next: NextFunction
       ) => {
         if (error instanceof AppError) {
           return response.status(error.statusCode).json({
-            status: 'error',
+            status: "error",
             message: error.message,
           });
         } else {
-          logger.info('Error: ' + error);
+          logger.info("Error: " + error);
           return response.status(500).json({
-            status: 'error',
-            message: 'Internal server error',
+            status: "error",
+            message: "Internal server error",
           });
         }
-      },
+      }
     );
   }
 
   private async databaseSetup(): Promise<void> {
     // await connect;
+    await database.connect();
   }
 
   public async start(): Promise<void> {
     await this.databaseSetup();
 
     this.app.listen(this.port, () => {
-      logger.info('Server rodando na porta: ' + this.port + ' 🚀');
+      logger.info("Server rodando na porta: " + this.port + " 🚀");
     });
   }
 
