@@ -3,6 +3,8 @@ import { IInfluencer } from "@modules/influencers/domain/models/IInfluencer";
 
 const InfluencerSchema: Schema = new mongoose.Schema({
   name: String,
+  email: String,
+  password: String,
   platforms: {
     twitter: {
       channel: String,

@@ -16,19 +16,10 @@ customersRouter.post(
       [Segments.BODY]: {
         name: Joi.string().required(),
         email: Joi.string().email().required(),
+        password: Joi.string().required()
       },
     }),
     influencersController.create,
   );
-
-// customersRouter.get(
-//   '/:id',
-//   celebrate({
-//     [Segments.PARAMS]: {
-//       id: Joi.string().uuid().required(),
-//     },
-//   }),
-//   influencersController.show,
-// );
 
 export default customersRouter;

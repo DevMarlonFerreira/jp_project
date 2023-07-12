@@ -12,20 +12,33 @@ class InfluencersRepository implements IInfluencersRepository {
     take,
   }: SearchParams): Promise<IInfluencerPaginate> {
     const influencers = await Influencer.find({});
-    logger.info(influencers);
     const result = {
       per_page: take,
       total: 1,
       current_page: page,
       data: influencers,
     };
+
+    logger.info(influencers);
+
+    // await Influencer.deleteMany({});
     return result;
   }
 
-  public async create(influencer: IInfluencer): Promise<any> {
-    await Influencer.create(influencer);
+  public async save(influencer: IInfluencer): Promise<IInfluencer> {
+    console.log(influencer)
+    const t = await Influencer.create(influencer);
+    await t.save();
 
-    return null;
+    return influencer;
+  }
+
+  public async findByEmail(email: string): Promise<IInfluencer | null> {
+    const influencer = await Influencer.findOne({email: email});
+
+    console.log(influencer)
+
+    return influencer;
   }
 
 

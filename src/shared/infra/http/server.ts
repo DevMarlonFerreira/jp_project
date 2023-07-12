@@ -3,10 +3,12 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response, Application } from "express";
 import "express-async-errors";
 import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
 import { errors } from "celebrate";
 import routes from "./routes";
 import AppError from "../../errors/AppError";
-import '@shared/container';
+import "@shared/container";
 import logger from "@config/logger";
 
 // import '@shared/typeorm';
@@ -26,17 +28,14 @@ export class SetupServer {
   }
 
   private setupExpress(): void {
-    this.app.use(routes);
-    this.app.use(errors());
-
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(
       cors({
         origin: "*",
       })
     );
-
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(routes);
     this.app.use(errors());
     this.app.use(
       (
@@ -59,11 +58,13 @@ export class SetupServer {
         }
       }
     );
+    this.app.use(helmet());
+    this.app.use(compression());
   }
 
   private async databaseSetup(): Promise<void> {
     // await connect;
-    await database.connect();
+    const esse = await database.connect();
   }
 
   public async start(): Promise<void> {
