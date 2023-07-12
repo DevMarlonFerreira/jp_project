@@ -11,7 +11,7 @@ class InfluencersRepository implements IInfluencersRepository {
     skip,
     take,
   }: SearchParams): Promise<IInfluencerPaginate> {
-    const influencers = await Influencer.find({});
+    const influencers = await Influencer.find({}).lean();
     const result = {
       per_page: take,
       total: 1,
@@ -19,14 +19,10 @@ class InfluencersRepository implements IInfluencersRepository {
       data: influencers,
     };
 
-    logger.info(influencers);
-
-    // await Influencer.deleteMany({});
     return result;
   }
 
   public async save(influencer: IInfluencer): Promise<IInfluencer> {
-    console.log(influencer)
     const t = await Influencer.create(influencer);
     await t.save();
 
@@ -34,9 +30,7 @@ class InfluencersRepository implements IInfluencersRepository {
   }
 
   public async findByEmail(email: string): Promise<IInfluencer | null> {
-    const influencer = await Influencer.findOne({email: email});
-
-    console.log(influencer)
+    const influencer = await Influencer.findOne({email: email}).select('_id').lean();
 
     return influencer;
   }
