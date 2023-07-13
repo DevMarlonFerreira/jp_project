@@ -35,6 +35,12 @@ class InfluencersRepository implements IInfluencersRepository {
     return influencer;
   }
 
+  public async findById(id: string): Promise<IInfluencer | null> {
+    const influencer = await Influencer.findOne({_id: id}).select('-password').lean();
+
+    return influencer;
+  }
+
 
   // public async findAll2({
   //   page,
