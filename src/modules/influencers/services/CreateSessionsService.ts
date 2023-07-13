@@ -6,6 +6,7 @@ import { ICreateSession } from "../domain/models/ICreateSession";
 import { IInfluencerAuthenticated } from "../domain/models/IInfluencerAuthenticated";
 import { IInfluencersRepository } from "../domain/repositories/IInfluencersRepository";
 import { IHashProvider } from "../providers/HashProvider/models/IHashPovider";
+import { ITokenProvider } from "../providers/TokenProvider/models/ITokenProvider";
 
 @injectable()
 class CreateSessionsService {
@@ -14,7 +15,10 @@ class CreateSessionsService {
     private usersRepository: IInfluencersRepository,
 
     @inject("HashProvider")
-    private hashProvider: IHashProvider
+    private hashProvider: IHashProvider,
+
+    @inject("TokenProvider")
+    private tokenProvider: ITokenProvider
   ) {}
 
   public async execute({
@@ -36,10 +40,7 @@ class CreateSessionsService {
       throw new AppError("Incorrect email/password combination.", 401);
     }
 
-    const token = sign({}, authConfig.jwt.secret as Secret, {
-      subject: influencer._id,
-      expiresIn: authConfig.jwt.expiresIn,
-    });
+    const token = await this.tokenProvider.generateToken(influencer._id);
 
     return {
       influencer,
