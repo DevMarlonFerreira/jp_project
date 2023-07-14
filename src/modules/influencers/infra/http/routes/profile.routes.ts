@@ -13,7 +13,7 @@ const profileController = new ProfileController();
 // profileRouter.use(isAuthenticated);
 
 
-
-profileRouter.get("/",(req, res, next) =>  new IsAuthenticated(req, res, next), profileController.show);
+profileRouter.get("/", profileController.show);
+// profileRouter.get("/",(req, res, next) =>  new IsAuthenticated(req, res, next), profileController.show);
 
 export default profileRouter;

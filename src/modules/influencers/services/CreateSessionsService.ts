@@ -1,7 +1,5 @@
 import { inject, injectable } from "tsyringe";
 import AppError from "@shared/errors/AppError";
-import { sign, Secret } from "jsonwebtoken";
-import authConfig from "@config/auth";
 import { ICreateSession } from "../domain/models/ICreateSession";
 import { IInfluencerAuthenticated } from "../domain/models/IInfluencerAuthenticated";
 import { IInfluencersRepository } from "../domain/repositories/IInfluencersRepository";
@@ -11,8 +9,8 @@ import { ITokenProvider } from "../providers/TokenProvider/models/ITokenProvider
 @injectable()
 class CreateSessionsService {
   constructor(
-    @inject("UsersRepository")
-    private usersRepository: IInfluencersRepository,
+    @inject("InfluencersRepository")
+    private influencersRepository: IInfluencersRepository,
 
     @inject("HashProvider")
     private hashProvider: IHashProvider,
@@ -25,25 +23,25 @@ class CreateSessionsService {
     email,
     password,
   }: ICreateSession): Promise<IInfluencerAuthenticated> {
-    const influencer = await this.usersRepository.findByEmail(email);
+    const influencer = await this.influencersRepository.findByEmail(email);
 
     if (!influencer) {
       throw new AppError("Incorrect email/password combination.", 401);
     }
-
     const passwordConfirmed = await this.hashProvider.compareHash(
       password,
       influencer.password
     );
-
     if (!passwordConfirmed) {
       throw new AppError("Incorrect email/password combination.", 401);
     }
 
-    const token = await this.tokenProvider.generateToken(influencer._id);
+    const id = influencer._id.toString();
+    const name = influencer.name;
 
+    const token = await this.tokenProvider.generateToken(id);
     return {
-      influencer,
+      name,
       token,
     };
   }

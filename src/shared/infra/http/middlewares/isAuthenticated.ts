@@ -2,8 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import AppError from "@shared/errors/AppError";
 import { ITokenProvider } from "@modules/influencers/providers/TokenProvider/models/ITokenProvider";
+import { Secret, verify } from "jsonwebtoken";
+import authConfig from "@config/auth";
 
-@injectable()
+interface ITokenPayload {
+  iat: number;
+  exp: number;
+  sub: string;
+}
+
 export default function isAuthenticated(
   request: Request,
   response: Response,
@@ -18,7 +25,7 @@ export default function isAuthenticated(
   const [, token] = authHeader.split(" ");
 
   try {
-    const decodedToken = verify(token, authConfig.jwt.secret);
+    const decodedToken = verify(token, authConfig.jwt.secret as Secret);
 
     const { sub } = decodedToken as ITokenPayload;
 
@@ -31,15 +38,6 @@ export default function isAuthenticated(
     throw new AppError("Invalid Token.");
   }
 }
-
-
-
-
-
-
-
-
-
 
 // @injectable()
 // class IsAuthenticated {
@@ -72,4 +70,3 @@ export default function isAuthenticated(
 // }
 
 // export default IsAuthenticated;
-

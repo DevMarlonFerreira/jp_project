@@ -1,6 +1,4 @@
-import { IInfluencer } from "./IInfluencer";
-
 export interface IInfluencerAuthenticated {
-  influencer: IInfluencer;
+  name: string;
   token: string;
 }

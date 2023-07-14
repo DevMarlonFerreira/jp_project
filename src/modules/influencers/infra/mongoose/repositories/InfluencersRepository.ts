@@ -30,7 +30,7 @@ class InfluencersRepository implements IInfluencersRepository {
   }
 
   public async findByEmail(email: string): Promise<IInfluencer | null> {
-    const influencer = await Influencer.findOne({email: email}).select('_id').lean();
+    const influencer = await Influencer.findOne({email: email}).lean();
 
     return influencer;
   }
